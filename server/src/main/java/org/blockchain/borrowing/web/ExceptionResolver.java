@@ -47,7 +47,6 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
         if (body == null) {
             return super.doResolveException(request, response, handler, ex);
         }
-        ModelAndView mv = new ModelAndView();
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
@@ -55,9 +54,10 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
         try {
             response.getWriter().write(
                     "{\"error\":\"" + ex.getMessage() + "\"}");
+            return new ModelAndView();
         } catch (IOException e) {
             logger.error("response error!", e);
+            throw new RuntimeException(e);
         }
-        return mv;
     }
 }
