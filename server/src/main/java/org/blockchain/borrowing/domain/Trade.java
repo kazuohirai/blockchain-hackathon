@@ -1,12 +1,15 @@
 package org.blockchain.borrowing.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * 交易记录
- *
+ * <p>
  * Created by pengchangguo on 16/1/9.
  */
 @Entity
@@ -169,5 +172,18 @@ public class Trade {
 
     public void setLastTime(Date lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public static Trade sampleValue() {
+        Trade trade = new Trade();
+        trade.borrowerHash = "borrowerHash";
+        trade.lenderHash = "lenderHash";
+        trade.borrower = 1L;
+        trade.lender = 2L;
+        trade.amount = 1000L;
+        trade.interest = 10L;
+        trade.status = Status.INIT;
+
+        return trade;
     }
 }
