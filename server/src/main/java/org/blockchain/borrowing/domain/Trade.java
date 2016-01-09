@@ -67,6 +67,12 @@ public class Trade {
     private Status status;
 
     /**
+     * 还款时间
+     */
+    @Column(name = "repay_date")
+    private Date repayDate;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
