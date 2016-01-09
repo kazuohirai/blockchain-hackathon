@@ -15,13 +15,22 @@ public class UserService {
     private UserRepository userRepository;
 
     /**
-     * @param user
-     * @return
+     * Create User Service
+     *
+     * @param user a user to be created
+     * @return created User Object
      */
     public User registry(User user) {
         return userRepository.save(user);
     }
 
+    /**
+     * User Logon Service
+     *
+     * @param phone user's phone
+     * @param password user's password
+     * @return the user object queried by user's phone
+     */
     public User logon(String phone, String password) {
         User user = userRepository.findByPhone(phone);
         if (user == null) {
@@ -33,15 +42,39 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Find a User by user's id
+     *
+     * @param id user's id
+     * @return user object queried by id
+     */
     public User findById(Long id) {
         return userRepository.findOne(id);
     }
 
+    /**
+     * deduct amount
+     *
+     * @param user current user
+     * @param amount amount
+     * @return deducted user
+     */
     public User deduct(User user, BigDecimal amount) {
-        return User.sampleValue();
+        User _user = userRepository.findOne(user.getId());
+        _user.setAmount(_user.getAmount().subtract(amount));
+        return userRepository.save(_user);
     }
 
+    /**
+     * recharge amount
+     *
+     * @param user current user
+     * @param amount amount
+     * @return recharged user
+     */
     public User recharge(User user, BigDecimal amount) {
-        return User.sampleValue();
+        User _user = userRepository.findOne(user.getId());
+        _user.setAmount(_user.getAmount().add(amount));
+        return userRepository.save(_user);
     }
 }
