@@ -1,9 +1,6 @@
 package org.blockchain.borrowing.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
@@ -43,11 +40,17 @@ public class Trade {
     @Column(name = "borrower")
     private long borrower;
 
+    @Transient
+    private User borrowerUser;
+
     /**
      * 放款人
      */
     @Column(name = "lender")
     private Long lender;
+
+    @Transient
+    private User lenderUser;
 
     /**
      * 金额
@@ -84,7 +87,6 @@ public class Trade {
      */
     @Column(name = "last_time")
     private Date lastTime = new Date();
-
 
     public enum Status {
 
@@ -189,6 +191,22 @@ public class Trade {
         this.repayDate = repayDate;
     }
 
+    public User getLenderUser() {
+        return lenderUser;
+    }
+
+    public void setLenderUser(User lenderUser) {
+        this.lenderUser = lenderUser;
+    }
+
+    public User getBorrowerUser() {
+        return borrowerUser;
+    }
+
+    public void setBorrowerUser(User borrowerUser) {
+        this.borrowerUser = borrowerUser;
+    }
+
     public static Trade sampleValue() {
         Trade trade = new Trade();
         trade.borrowerHash = "borrowerHash";
@@ -198,7 +216,45 @@ public class Trade {
         trade.amount = BigDecimal.valueOf(100);
         trade.interest = BigDecimal.ONE;
         trade.status = Status.INIT;
+        trade.borrowerUser = new User();
+        trade.borrowerUser.setName("甲");
+        trade.lenderUser = new User();
+        trade.lenderUser.setName("乙");
 
         return trade;
+    }
+
+    public static Trade sampleValue(Status status) {
+        Trade trade = new Trade();
+        trade.borrowerHash = "borrowerHash";
+        trade.lenderHash = "lenderHash";
+        trade.borrower = 1L;
+        trade.lender = 2L;
+        trade.amount = BigDecimal.valueOf(100);
+        trade.interest = BigDecimal.ONE;
+        trade.status = status;
+        trade.borrowerUser = new User();
+        trade.borrowerUser.setName("甲");
+        trade.lenderUser = new User();
+        trade.lenderUser.setName("乙");
+
+        return trade;
+    }
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "amount=" + amount +
+                ", tradeNo='" + tradeNo + '\'' +
+                ", borrowerHash='" + borrowerHash + '\'' +
+                ", lenderHash='" + lenderHash + '\'' +
+                ", borrower=" + borrower +
+                ", lender=" + lender +
+                ", interest=" + interest +
+                ", status=" + status +
+                ", repayDate=" + repayDate +
+                ", createTime=" + createTime +
+                ", lastTime=" + lastTime +
+                '}';
     }
 }
