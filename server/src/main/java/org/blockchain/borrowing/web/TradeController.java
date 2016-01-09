@@ -2,6 +2,7 @@ package org.blockchain.borrowing.web;
 
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.Trade;
+import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.service.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

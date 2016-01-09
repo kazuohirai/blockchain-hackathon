@@ -13,11 +13,10 @@ public class UserService {
     private UserRepository userRepository;
 
     /**
-     *
      * @param user
      * @return
      */
-    public User registry(User user){
+    public User registry(User user) {
         return userRepository.save(user);
     }
 
@@ -34,5 +33,13 @@ public class UserService {
 
     public User findById(Long id) {
         return userRepository.findOne(id);
+    }
+
+    public User deduct(User user, Double amount) {
+        return User.sampleValue();
+    }
+
+    public User recharge(User user, Double amount) {
+        return User.sampleValue();
     }
 }
