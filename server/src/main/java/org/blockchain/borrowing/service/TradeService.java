@@ -133,17 +133,16 @@ public class TradeService {
         return trade;
     }
 
-    private Function<Trade, Trade> updateUser = new Function<Trade, Trade>() {
+    public Function<Trade, Trade> updateUser = new Function<Trade, Trade>() {
         @Override
         public Trade apply(Trade trade) {
             User borrow = userRepository.findOne(trade.getBorrower());
-
+            trade.setBorrowerUser(borrow);
             if (trade.getLender() != null) {
                 User lender = userRepository.findOne(trade.getLender());
                 trade.setLenderUser(lender);
             }
 
-            trade.setBorrowerUser(borrow);
             return trade;
         }
     };

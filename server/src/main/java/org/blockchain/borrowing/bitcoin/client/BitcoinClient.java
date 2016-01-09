@@ -5,6 +5,7 @@ import com.squareup.okhttp.*;
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.bitcoin.client.domain.Entry;
 import org.blockchain.borrowing.bitcoin.client.domain.EntryCommit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,16 +13,14 @@ import java.io.IOException;
 @Component
 public class BitcoinClient {
 
-    private static final String CHAIN_ID = "ef709aedfafeb7fb60e76c4714f7f18df2c36d479edd016f78cff7ec08dd8911";
+    @Value("${blockchain.chain.id}")
+    private String CHAIN_ID;
+    @Value("${blockchain.api}")
+    private String API_URL;
+
     private static final Logger LOG = Logger.getLogger(BitcoinClient.class);
     private final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON_MEDIA = MediaType.parse("application/json; charset=utf-8");
-
-    private final static String BLOCK_COMMIT = "http://192.168.0.233:8089/v1/compose-entry-submit/zeros";
-    private final static String COMMIT_URL = "http://192.168.0.233:8088/v1/commit-entry";
-    private final static String REVEAL_URL = "http://192.168.0.233:8088/v1/reveal-entry";
-    private final static String FIND_URL = "http://192.168.0.233:8088/v1/entry-by-hash/";
-
 
     public EntryCommit composeCommit(Entry entry) {
         EntryCommit entryCommit = blockCommit(entry);
@@ -33,6 +32,7 @@ public class BitcoinClient {
 
 
     public EntryCommit blockCommit(Entry entry) {
+        final String BLOCK_COMMIT = API_URL + ":8089/v1/compose-entry-submit/zeros";
         entry.setChainID(CHAIN_ID);
 
         RequestBody requestBody = RequestBody.create(JSON_MEDIA, JSON.toJSON(entry).toString());
@@ -52,6 +52,7 @@ public class BitcoinClient {
     }
 
     public void commit(EntryCommit entryCommit) {
+        final String COMMIT_URL = API_URL + ":8088/v1/commit-entry";
         RequestBody requestBody = RequestBody.create(JSON_MEDIA, JSON.toJSON(entryCommit.getEntryCommit()).toString());
         Request request = new Request.Builder()
                 .url(COMMIT_URL)
@@ -67,6 +68,7 @@ public class BitcoinClient {
     }
 
     public void reveal(EntryCommit entryCommit) {
+        final String REVEAL_URL = API_URL + ":8088/v1/reveal-entry";
         RequestBody requestBody = RequestBody.create(JSON_MEDIA, JSON.toJSON(entryCommit.getEntryReveal()).toString());
         Request request = new Request.Builder()
                 .url(REVEAL_URL)
@@ -82,6 +84,7 @@ public class BitcoinClient {
     }
 
     public Entry findByHash(String hash) {
+        final String FIND_URL = API_URL + ":8088/v1/entry-by-hash/";
         Request request = new Request.Builder()
                 .url(FIND_URL + hash)
                 .get()
