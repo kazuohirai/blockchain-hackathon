@@ -32,7 +32,7 @@ public class TradeController {
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByBorrowerAndStatues(userId, Collections.singleton(tradeStatus));
-        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue()));
+        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus)));
     }
 
     @RequestMapping(path = "/as-lender", method = RequestMethod.GET)
@@ -41,7 +41,7 @@ public class TradeController {
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
-        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue()));
+        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus)));
     }
 
     /**
@@ -53,10 +53,10 @@ public class TradeController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Trade create(@PathVariable("userId") long userId, @RequestBody Trade trade) {
-
+        trade.setBorrower(userId);
         trade = tradeService.postTrade(trade);
 
-        return Trade.sampleValue();
+        return trade;
     }
 
     /**
@@ -71,7 +71,7 @@ public class TradeController {
 
         Trade trade = tradeService.findOne(tradeNo);
 
-        return Trade.sampleValue();
+        return trade;
     }
 
 
@@ -86,7 +86,7 @@ public class TradeController {
         if (tradeStatus.equals(Trade.Status.ING)) {
             trade = tradeService.borrowTrade(userId, trade);
         } else {
-            trade = tradeService.repayTrade(trade);
+            trade = tradeService.repayTrade(userId, trade);
         }
 
         return Trade.sampleValue();

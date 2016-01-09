@@ -1,5 +1,6 @@
 package org.blockchain.borrowing.service;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.domain.User;
@@ -37,7 +38,12 @@ public class TradeService {
         return tradeRepository.findByLenderAndStatusIn(userId, statues);
     }
 
-
+    /**
+     * post a trade
+     *
+     * @param trade
+     * @return
+     */
     public Trade postTrade(Trade trade) {
         ValidateUtils.notNulls(trade.getBorrower(), trade.getAmount(), trade.getInterest());
 
@@ -48,22 +54,39 @@ public class TradeService {
         return trade;
     }
 
-
+    /**
+     * borrow a trade
+     *
+     * @param userId lender id
+     * @param trade
+     * @return
+     */
     public Trade borrowTrade(long userId, Trade trade) {
         LOG.info(String.format("borrow trade of trade %s, user id %s", trade, userId));
-
         User currentUser = userService.findById(userId);
+        Validate.isTrue(userId != trade.getBorrower());
+//        Validate.isTrue(trade.getStatus().equals(Trade.Status.INIT));
+        
         userService.deduct(currentUser, trade.getAmount());
 
+        trade.setLender(currentUser.getId());
         trade.setStatus(Trade.Status.ING);
         trade = tradeRepository.save(trade);
 
         return trade;
     }
 
-
-    public Trade repayTrade(Trade trade) {
+    /**
+     * repay a trade
+     *
+     * @param userId borrow id
+     * @param trade  trade
+     * @return
+     */
+    public Trade repayTrade(long userId, Trade trade) {
         LOG.info(String.format("repay trade of %s", trade));
+        Validate.isTrue(userId == trade.getBorrower());
+//        Validate.isTrue(trade.getStatus().equals(Trade.Status.ING));
 
         User borrowUser = userService.findById(trade.getBorrower());
         User lenderUser = userService.findById(trade.getLender());
