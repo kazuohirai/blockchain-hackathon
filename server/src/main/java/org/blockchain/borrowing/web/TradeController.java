@@ -7,5 +7,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/transaction")
 public class TradeController {
 
-
 }

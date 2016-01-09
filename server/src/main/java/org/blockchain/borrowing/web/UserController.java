@@ -2,9 +2,11 @@ package org.blockchain.borrowing.web;
 
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.User;
-import org.blockchain.borrowing.repository.UserRepository;
+import org.blockchain.borrowing.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * User Controller
@@ -19,31 +21,22 @@ public class UserController {
     private final static Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Iterable<User> index() {
-        User liming = new User();
-        liming.setName("liming");
-        User pcg = new User();
-        pcg.setName("pcg");
-        userRepository.save(liming);
-        userRepository.save(pcg);
-        return userRepository.findAll();
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public User registry(@RequestBody User user) {
+        return userService.registry(user);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public User register(@RequestBody User userInfo) {
-        return new User();
-    }
-
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public User login(@RequestBody User loginInfo) {
-        return new User();
+    @RequestMapping(path = "/logon", method = RequestMethod.POST)
+    public User logon(@RequestBody Map<String, String> map) {
+        return User.sampleValue();
+        //return userService.logon(map.get("phone"), map.get("password"));
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable(value = "id") Long id) {
-        return new User();
+    public User get(@PathVariable(value = "id") Long id) {
+        return User.sampleValue();
+        //return userService.findById(id);
     }
 }

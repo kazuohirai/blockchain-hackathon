@@ -1,6 +1,8 @@
 package org.blockchain.borrowing.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User Entity
@@ -38,6 +40,18 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    /**
+     * 密码
+     */
+    @Column(name = "password")
+    private String password;
+
+    /**
+     * 联系人
+     */
+    @Transient()
+    private List<User> contacts;
+
     public Long getId() {
         return id;
     }
@@ -68,5 +82,29 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<User> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<User> contacts) {
+        this.contacts = contacts;
+    }
+
+    public static User sampleValue() {
+        User user = new User();
+        user.id = 1L;
+        user.name = "pcg";
+        user.phone = "15802540615";
+        return user;
     }
 }
