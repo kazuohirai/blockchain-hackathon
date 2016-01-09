@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
@@ -34,8 +32,7 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-Control","no-cache, must-revalidate");
         try {
-            response.getWriter().write(
-                    "{\"error\":\"" + ex.getMessage() + "\"}");
+            response.getWriter().write("{\"error\":\"" + ex.getMessage() + "\"}");
             return new ModelAndView();
         } catch (IOException e) {
             logger.error("response error!", e);
