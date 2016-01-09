@@ -79,7 +79,7 @@ public class Trade {
     private Date lastTime = new Date();
 
 
-    enum Status {
+    public enum Status {
 
         /* 初始状态 */
         INIT,
