@@ -29,11 +29,6 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         logger.error(String.format("执行错误 %s : %s", request.getRequestURL(), new Gson().toJson(request.getParameterMap())), ex);
-        HandlerMethod mathod = (HandlerMethod) handler;
-        ResponseBody body = mathod.getMethodAnnotation(ResponseBody.class);
-        if (body == null) {
-            return super.doResolveException(request, response, handler, ex);
-        }
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
@@ -44,7 +39,7 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
             return new ModelAndView();
         } catch (IOException e) {
             logger.error("response error!", e);
-            throw new RuntimeException(e);
+            return super.doResolveException(request, response, handler, ex);
         }
     }
 }

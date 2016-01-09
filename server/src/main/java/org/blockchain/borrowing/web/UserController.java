@@ -30,8 +30,8 @@ public class UserController {
 
     @RequestMapping(path = "/logon", method = RequestMethod.POST)
     public User logon(@RequestBody Map<String, String> map) {
-        return User.sampleValue();
-        //return userService.logon(map.get("phone"), map.get("password"));
+        //return User.sampleValue();
+        return userService.logon(map.get("phone"), map.get("password"));
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
