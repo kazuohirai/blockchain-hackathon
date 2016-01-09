@@ -1,5 +1,7 @@
 package org.blockchain.borrowing.domain;
 
+import org.blockchain.borrowing.bitcoin.client.domain.Entry;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -245,4 +247,23 @@ public class Trade {
                 ", lastTime=" + lastTime +
                 '}';
     }
+
+    public static Trade fromEntry(Entry entry) {
+        Trade trade = fromRecordTrade(RecordTrade.fromEntry(entry));
+        trade.status = Status.valueOf(entry.getExtIDs().get(1));
+        return trade;
+    }
+
+    public static Trade fromRecordTrade(RecordTrade recordTrade) {
+        Trade trade = new Trade();
+        trade.amount = recordTrade.getAmount();
+        trade.borrower = recordTrade.getBorrower();
+        trade.lender = recordTrade.getLender();
+        trade.interest = recordTrade.getInterest();
+        trade.repayDate = recordTrade.getRepayDate();
+        trade.actualRepayDate = recordTrade.getActualRepayDate();
+
+        return trade;
+    }
 }
+

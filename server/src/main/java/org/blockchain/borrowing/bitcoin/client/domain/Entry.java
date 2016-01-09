@@ -1,6 +1,9 @@
 package org.blockchain.borrowing.bitcoin.client.domain;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.codec.binary.Hex;
+import org.blockchain.borrowing.domain.RecordTrade;
+import org.blockchain.borrowing.domain.Trade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +50,15 @@ public class Entry {
         } catch (Exception e) {
 
         }
+
+        return entry;
+    }
+
+    public static Entry fromTrade(Trade trade) {
+        Entry entry = new Entry();
+        entry.ExtIDs = Arrays.asList("CTCF", trade.getStatus().name());
+        RecordTrade recordTrade = RecordTrade.fromTrade(trade);
+        entry.Content = JSON.toJSON(recordTrade).toString();
 
         return entry;
     }

@@ -87,6 +87,7 @@ public class TradeServiceTest {
         List<Trade> trades = tradeService.listByBorrowerAndStatues(borrow.getId(), Collections.singleton(Trade.Status.ING));
         Assert.assertTrue(trades.size() == 1);
         Assert.assertTrue(trades.get(0).getAmount().doubleValue() == 100);
+        Assert.assertTrue(trades.get(0).getBorrowerHash() != null);
 
         trades = tradeService.listByLenderAndStatues(lender.getId(), Collections.singleton(Trade.Status.ING));
         Assert.assertTrue(trades.size() == 1);
@@ -121,6 +122,8 @@ public class TradeServiceTest {
 
         List<Trade> trades = tradeService.listByBorrowerAndStatues(borrow.getId(), Collections.singleton(Trade.Status.COM));
         Assert.assertTrue(trades.size() == 1);
+        Assert.assertTrue(trades.get(0).getBorrowerHash() != null);
+        Assert.assertTrue(trades.get(0).getLenderHash() != null);
 
         trades = tradeService.listByLenderAndStatues(lender.getId(), Collections.singleton(Trade.Status.COM));
         Assert.assertTrue(trades.size() == 1);

@@ -4,6 +4,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
+import org.blockchain.borrowing.bitcoin.client.BitcoinClient;
+import org.blockchain.borrowing.bitcoin.client.domain.Entry;
+import org.blockchain.borrowing.bitcoin.client.domain.EntryCommit;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.TradeRepository;
@@ -28,6 +31,9 @@ public class TradeService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BitcoinClient bitcoinClient;
 
     public Trade findOne(String tranNo) {
         return tradeRepository.findOne(tranNo);
@@ -91,6 +97,9 @@ public class TradeService {
 
         trade.setLender(currentUser.getId());
         trade.setStatus(Trade.Status.ING);
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setBorrowerHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;
@@ -117,6 +126,9 @@ public class TradeService {
 
         trade.setStatus(Trade.Status.COM);
         trade.setActualRepayDate(new Date());
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setLenderHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;

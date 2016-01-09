@@ -22,6 +22,16 @@ public class BitcoinClient {
     private final static String REVEAL_URL = "http://192.168.0.233:8088/v1/reveal-entry";
     private final static String FIND_URL = "http://192.168.0.233:8088/v1/entry-by-hash/";
 
+
+    public EntryCommit composeCommit(Entry entry) {
+        EntryCommit entryCommit = blockCommit(entry);
+        commit(entryCommit);
+        reveal(entryCommit);
+
+        return entryCommit;
+    }
+
+
     public EntryCommit blockCommit(Entry entry) {
         entry.setChainID(CHAIN_ID);
 
