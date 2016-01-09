@@ -37,7 +37,7 @@ public class User {
     /**
      * 手机号码
      */
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     /**

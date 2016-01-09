@@ -81,7 +81,7 @@ public class TradeService {
      * borrow a trade
      *
      * @param userId lender id
-     * @param trade trade object data
+     * @param trade  trade object data
      * @return saved trade object
      */
     public Trade borrowTrade(long userId, Trade trade) {
@@ -114,6 +114,7 @@ public class TradeService {
     public Trade repayTrade(long userId, Trade trade) {
         LOG.info(String.format("repay trade of %s", trade));
         Validate.isTrue(userId == trade.getBorrower());
+        ValidateUtils.isSame(trade, Trade.fromEntry(bitcoinClient.findByHash(trade.getBorrowerHash()).toReadable()));
 //        Validate.isTrue(trade.getStatus().equals(Trade.Status.ING));
 
         User borrowUser = userService.findById(trade.getBorrower());

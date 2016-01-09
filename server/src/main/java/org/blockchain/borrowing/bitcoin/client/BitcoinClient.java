@@ -85,18 +85,24 @@ public class BitcoinClient {
 
     public Entry findByHash(String hash) {
         final String FIND_URL = API_URL + ":8088/v1/entry-by-hash/";
+        Integer tryTimes = 3;
+
         Request request = new Request.Builder()
                 .url(FIND_URL + hash)
                 .get()
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
+        while (tryTimes > 0) {
+            try {
+                Response response = client.newCall(request).execute();
 
-            return JSON.parseObject(response.body().string(), Entry.class);
-        } catch (IOException e) {
-            LOG.error("can't get response of " + FIND_URL);
+                return JSON.parseObject(response.body().string(), Entry.class);
+            } catch (IOException e) {
+                LOG.error("can't get response of " + FIND_URL);
+                tryTimes--;
+            }
         }
+
 
         return null;
     }
