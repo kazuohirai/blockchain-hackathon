@@ -71,6 +71,7 @@ public class Trade {
      * 状态
      */
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private Status status = Status.INIT;
 
     /**

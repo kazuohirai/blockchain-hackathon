@@ -37,8 +37,7 @@ public class BitcoinClientTest {
         bitcoinClient.reveal(entryCommit);
         String hash = entryCommit.getHash();
 
-        Entry entry1 = bitcoinClient.findByHash(hash);
-        entry1 = entry1.toReadable();
+        bitcoinClient.findByHash(hash);
     }
 
 }
