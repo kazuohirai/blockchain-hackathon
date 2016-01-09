@@ -5,11 +5,12 @@ import org.blockchain.borrowing.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
  * User Controller
- *
+ * <p>
  * Created by pengchangguo on 16/1/9.
  */
 
@@ -33,5 +34,11 @@ public class UserController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public User get(@PathVariable(value = "id") Long id) {
         return userService.findById(id);
+    }
+
+    @RequestMapping(path = "/{id}/recharge", method = RequestMethod.POST)
+    public User recharge(@PathVariable(value = "id") Long id,
+                         @RequestParam(value = "balance") BigDecimal balance) {
+        return userService.recharge(userService.findById(id), balance);
     }
 }
