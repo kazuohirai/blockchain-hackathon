@@ -7,6 +7,7 @@ import org.blockchain.borrowing.web.vo.ValueVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,25 @@ public class TradeController {
 
         return ValueVo.aValue(trades);
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ValueVo listAll(@PathVariable("userId") long userId,
+                           @RequestParam(value = "status", required = false, defaultValue = "COM") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
+
+        Trade.Status tradeStatus = Trade.Status.valueOf(status);
+        List<Trade> trades = new ArrayList<>();
+        List<Trade> tradesAsBorrow = tradeService.listByBorrowerAndStatues(userId, Collections.singleton(tradeStatus));
+        List<Trade> tradesAsLender = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
+        if (!tradesAsBorrow.isEmpty()) {
+            trades.addAll(tradesAsBorrow);
+        }
+
+        if (!tradesAsLender.isEmpty()) {
+            trades.addAll(tradesAsLender);
+        }
+        return ValueVo.aValue(trades);
+    }
+
 
     /**
      * Create a trade
