@@ -6,8 +6,6 @@ import org.blockchain.borrowing.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 /**
  * User Controller
  * <p>
@@ -35,17 +33,17 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public User register(@RequestBody Map<String, String> userInfo) {
+    public User register(@RequestBody User userInfo) {
         return new User();
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public User login(@RequestBody Map<String, String> loginInfo) {
+    public User login(@RequestBody User loginInfo) {
         return new User();
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("id") Long id) {
+    public User getUser(@PathVariable(value = "id") Long id) {
         return new User();
     }
 }
