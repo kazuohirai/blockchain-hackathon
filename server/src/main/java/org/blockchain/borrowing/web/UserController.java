@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * User Controller
- * <p>
+ *
  * Created by pengchangguo on 16/1/9.
  */
 
@@ -32,6 +32,6 @@ public class UserController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public User get(@PathVariable(value = "id") Long id) {
-        return User.sampleValue();
+        return userService.findById(id);
     }
 }
