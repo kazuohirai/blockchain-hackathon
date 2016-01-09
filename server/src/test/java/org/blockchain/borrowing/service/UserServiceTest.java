@@ -70,7 +70,7 @@ public class UserServiceTest {
         user.setAmount(new BigDecimal(100));
         user = userRepository.save(user);
         User _user = userService.deduct(user, new BigDecimal(10));
-        Assert.assertEquals(_user.getAmount().subtract(new BigDecimal(90)), new BigDecimal(0).setScale(2));
+        Assert.assertEquals(_user.getAmount().subtract(new BigDecimal(90)), new BigDecimal(0).setScale(2, BigDecimal.ROUND_DOWN));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserServiceTest {
         user.setAmount(new BigDecimal(100));
         user = userRepository.save(user);
         User _user = userService.recharge(user, new BigDecimal(10));
-        Assert.assertEquals(_user.getAmount().subtract(new BigDecimal(110)), new BigDecimal(0).setScale(2));
+        Assert.assertEquals(_user.getAmount().subtract(new BigDecimal(110)), new BigDecimal(0).setScale(2, BigDecimal.ROUND_DOWN));
     }
 
 }
