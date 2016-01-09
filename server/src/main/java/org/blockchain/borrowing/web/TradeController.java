@@ -7,7 +7,6 @@ import org.blockchain.borrowing.web.vo.ValueVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class TradeController {
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByBorrowerAndStatues(userId, Collections.singleton(tradeStatus));
-        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus)));
+        return ValueVo.aValue(trades);
     }
 
     @RequestMapping(path = "/as-lender", method = RequestMethod.GET)
@@ -41,7 +40,7 @@ public class TradeController {
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
-        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus), Trade.sampleValue(tradeStatus)));
+        return ValueVo.aValue(trades);
     }
 
     /**
@@ -89,6 +88,6 @@ public class TradeController {
             trade = tradeService.repayTrade(userId, trade);
         }
 
-        return Trade.sampleValue();
+        return trade;
     }
 }
