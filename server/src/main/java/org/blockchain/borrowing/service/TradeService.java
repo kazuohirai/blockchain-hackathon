@@ -66,11 +66,14 @@ public class TradeService {
 
         User borrowUser = userService.findById(trade.getBorrower());
         User lenderUser = userService.findById(trade.getLender());
+        Double money = trade.getAmount();
 
-
+        userService.recharge(borrowUser, money);
+        userService.deduct(lenderUser, money);
 
         trade.setStatus(Trade.Status.COM);
         trade = tradeRepository.save(trade);
+
         return trade;
     }
 }

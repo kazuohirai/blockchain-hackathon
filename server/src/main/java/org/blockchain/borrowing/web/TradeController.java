@@ -2,8 +2,8 @@ package org.blockchain.borrowing.web;
 
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.Trade;
-import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.service.TradeService;
+import org.blockchain.borrowing.web.vo.ValueVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,21 +27,21 @@ public class TradeController {
      * @return
      */
     @RequestMapping(path = "/as-borrower", method = RequestMethod.GET)
-    public List<Trade> listAsBorrower(@PathVariable("userId") long userId,
-                                      @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
+    public ValueVo listAsBorrower(@PathVariable("userId") long userId,
+                                  @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByBorrowerAndStatues(userId, Collections.singleton(tradeStatus));
-        return Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue());
+        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue()));
     }
 
     @RequestMapping(path = "/as-lender", method = RequestMethod.GET)
-    public List<Trade> listAsLender(@PathVariable("userId") long userId,
-                                    @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
+    public ValueVo listAsLender(@PathVariable("userId") long userId,
+                                @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
         List<Trade> trades = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
-        return Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue());
+        return ValueVo.aValue(Arrays.asList(Trade.sampleValue(), Trade.sampleValue(), Trade.sampleValue()));
     }
 
     /**
