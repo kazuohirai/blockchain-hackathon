@@ -2,12 +2,11 @@ package org.blockchain.borrowing.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User Entity
- *
+ * <p>
  * Created by pengchangguo on 16/1/9.
  */
 
@@ -19,7 +18,7 @@ public class User {
      * 自增主键
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
@@ -121,5 +120,18 @@ public class User {
         user.name = "pcg";
         user.phone = "15802540615";
         return user;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "amount=" + amount +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", contacts=" + contacts +
+                '}';
     }
 }
