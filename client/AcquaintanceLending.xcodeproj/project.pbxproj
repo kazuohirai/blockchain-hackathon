@@ -81,6 +81,9 @@
 		4303735D1C40D7D60001ED50 /* LendDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4303735B1C40D7D60001ED50 /* LendDetailViewController.xib */; };
 		430373621C40E1A20001ED50 /* NewBorrowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 430373601C40E1A20001ED50 /* NewBorrowViewController.m */; };
 		430373631C40E1A20001ED50 /* NewBorrowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 430373611C40E1A20001ED50 /* NewBorrowViewController.xib */; };
+		433FE8DB1C412B3E0081C841 /* SummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 433FE8D91C412B3E0081C841 /* SummaryViewController.m */; };
+		433FE8DC1C412B3E0081C841 /* SummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 433FE8DA1C412B3E0081C841 /* SummaryViewController.xib */; };
+		433FE8E01C412BE70081C841 /* SummaryDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 433FE8DF1C412BE70081C841 /* SummaryDataModel.m */; };
 		D798E313EFB24F00A660BF4D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1D0D8AA6DD2FDDB58393E35 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -215,6 +218,11 @@
 		4303735F1C40E1A20001ED50 /* NewBorrowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewBorrowViewController.h; sourceTree = "<group>"; };
 		430373601C40E1A20001ED50 /* NewBorrowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewBorrowViewController.m; sourceTree = "<group>"; };
 		430373611C40E1A20001ED50 /* NewBorrowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewBorrowViewController.xib; sourceTree = "<group>"; };
+		433FE8D81C412B3E0081C841 /* SummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryViewController.h; sourceTree = "<group>"; };
+		433FE8D91C412B3E0081C841 /* SummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryViewController.m; sourceTree = "<group>"; };
+		433FE8DA1C412B3E0081C841 /* SummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SummaryViewController.xib; sourceTree = "<group>"; };
+		433FE8DE1C412BE70081C841 /* SummaryDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryDataModel.h; sourceTree = "<group>"; };
+		433FE8DF1C412BE70081C841 /* SummaryDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryDataModel.m; sourceTree = "<group>"; };
 		E1D0D8AA6DD2FDDB58393E35 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDE95A23A12A5C06C628161A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -699,6 +707,7 @@
 		430373511C40D6E90001ED50 /* SubViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				433FE8D71C412B310081C841 /* SummaryViewController */,
 				4303735E1C40E1970001ED50 /* NewBorrowViewController */,
 				430373581C40D7C90001ED50 /* LendDetailViewController */,
 				430373521C40D6F80001ED50 /* BorrowDetailViewController */,
@@ -734,6 +743,26 @@
 				430373611C40E1A20001ED50 /* NewBorrowViewController.xib */,
 			);
 			path = NewBorrowViewController;
+			sourceTree = "<group>";
+		};
+		433FE8D71C412B310081C841 /* SummaryViewController */ = {
+			isa = PBXGroup;
+			children = (
+				433FE8DD1C412BD40081C841 /* DataModel */,
+				433FE8D81C412B3E0081C841 /* SummaryViewController.h */,
+				433FE8D91C412B3E0081C841 /* SummaryViewController.m */,
+				433FE8DA1C412B3E0081C841 /* SummaryViewController.xib */,
+			);
+			path = SummaryViewController;
+			sourceTree = "<group>";
+		};
+		433FE8DD1C412BD40081C841 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				433FE8DE1C412BE70081C841 /* SummaryDataModel.h */,
+				433FE8DF1C412BE70081C841 /* SummaryDataModel.m */,
+			);
+			path = DataModel;
 			sourceTree = "<group>";
 		};
 		6A371919728C046F5308E227 /* Pods */ = {
@@ -821,6 +850,7 @@
 				430373371C4096B90001ED50 /* Localizable.strings in Resources */,
 				430372CC1C4089FB0001ED50 /* MainContentViewController.xib in Resources */,
 				430372D21C4089FB0001ED50 /* SimpleHorizontalTableViewCell.xib in Resources */,
+				433FE8DC1C412B3E0081C841 /* SummaryViewController.xib in Resources */,
 				430372C51C4089FB0001ED50 /* LoginViewController.xib in Resources */,
 				4303734B1C40B3020001ED50 /* BorrowDetailTableViewCell.xib in Resources */,
 				430371D21C4085D60001ED50 /* LaunchScreen.storyboard in Resources */,
@@ -882,6 +912,7 @@
 				4303734A1C40B3020001ED50 /* BorrowDetailTableViewCell.m in Sources */,
 				430372E41C4089FB0001ED50 /* NoneDataView.m in Sources */,
 				430373171C408A2E0001ED50 /* MJRefreshGifHeader.m in Sources */,
+				433FE8DB1C412B3E0081C841 /* SummaryViewController.m in Sources */,
 				430372EC1C4089FB0001ED50 /* PersistentHelper.m in Sources */,
 				430372EB1C4089FB0001ED50 /* TNCryptor.mm in Sources */,
 				430373131C408A2E0001ED50 /* MJRefreshComponent.m in Sources */,
@@ -893,6 +924,7 @@
 				430372A21C4089FB0001ED50 /* ECNetworkDataModel.m in Sources */,
 				4303731B1C408A2E0001ED50 /* UIScrollView+MJExtension.m in Sources */,
 				430373441C40AE560001ED50 /* MainContentDataModel.m in Sources */,
+				433FE8E01C412BE70081C841 /* SummaryDataModel.m in Sources */,
 				430372DE1C4089FB0001ED50 /* NSObject+ST.m in Sources */,
 				430372DB1C4089FB0001ED50 /* BasicUtility+TableView.m in Sources */,
 				430372A31C4089FB0001ED50 /* PushMessageDataModel.m in Sources */,

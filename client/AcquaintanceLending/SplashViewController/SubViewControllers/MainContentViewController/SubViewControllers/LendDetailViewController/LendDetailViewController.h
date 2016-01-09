@@ -11,6 +11,6 @@
 @interface LendDetailViewController : UIViewController
 
 @property (strong, nonatomic) NSDictionary *dicInfo;
-
+@property (assign, nonatomic) BOOL bHashMode;
 
 @end

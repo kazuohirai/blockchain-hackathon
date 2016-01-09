@@ -84,4 +84,20 @@
     [self userPost:[self getOperationServerUrl:strPath] parameters:dicParams withSuccess:success failure:failure];
 }
 
+- (void)requestForSummaryInfowWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSString *strPath = [NSString stringWithFormat:@"user/%@/trade/summary", [ECContext sharedInstance].userInfo[@"token"]];
+    
+    [self userGet:[self getOperationServerUrl:strPath] parameters:nil withSuccess:success failure:failure];
+}
+
+- (void)requestForHashInfo:(NSString*)strHashCode withSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSMutableDictionary *dicParams = [NSMutableDictionary dictionary];
+    dicParams[@"hash"] = strHashCode;
+    
+    [self get:[self getOperationServerUrl:@"/api/trade-by-hash"] parameters:dicParams withSuccess:success failure:failure];
+}
+
+
 @end

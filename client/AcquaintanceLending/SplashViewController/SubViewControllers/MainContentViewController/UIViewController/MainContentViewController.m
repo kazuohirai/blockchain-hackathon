@@ -22,6 +22,7 @@
 #import "BorrowDetailViewController.h"
 #import "BorrowDetailTableViewCell.h"
 #import "NewBorrowViewController.h"
+#import "SummaryViewController.h"
 
 
 @interface MainContentViewController () <MainContentDataModelDelegate>
@@ -51,6 +52,8 @@
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"用户" style:UIBarButtonItemStylePlain target:self action:@selector(leftBarButtonAction:)];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"统计" style:UIBarButtonItemStylePlain target:self action:@selector(rightBarButtonAction:)];
+
     _dataModel = [MainContentDataModel new];
     _dataModel.delegate = self;
     
@@ -88,6 +91,12 @@
 - (void)leftBarButtonAction:(id)sender
 {
     [[ECContext sharedInstance].sideMenu presentLeftMenuViewController];
+}
+
+- (void)rightBarButtonAction:(id)sender
+{
+    SummaryViewController *viewController = [[SummaryViewController alloc]initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)initCells

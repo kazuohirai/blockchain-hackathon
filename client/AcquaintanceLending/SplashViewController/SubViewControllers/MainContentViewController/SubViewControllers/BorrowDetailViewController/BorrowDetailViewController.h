@@ -11,5 +11,6 @@
 @interface BorrowDetailViewController : UIViewController
 
 @property (strong, nonatomic) NSDictionary *dicInfo;
+@property (assign, nonatomic) BOOL bHashMode;
 
 @end

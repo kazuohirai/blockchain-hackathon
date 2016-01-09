@@ -30,11 +30,17 @@
     // Do any additional setup after loading the view from its nib.
     if ([_dicInfo[@"status"]isEqualToString:@"INIT"]) {
         self.title = @"借款信息";
+        if (_bHashMode) {
+            self.title = @"借款信息校验";
+        }
         _lcBottom.constant = 60;
         _viewBottom.hidden = NO;
     }
     else {
         self.title = @"借款信息";
+        if (_bHashMode) {
+            self.title = @"借款信息校验";
+        }
         _lcBottom.constant = 0;
         _viewBottom.hidden = YES;
     }
@@ -79,10 +85,10 @@
     cellAmount.labelValue.text = _dicInfo[@"amount"];
     [_dicCells[@"Info"] addObject:cellAmount];
     
-    SimpleHorizontalTableViewCell *cellCreateTime = [SimpleHorizontalTableViewCell viewFromNib];
-    cellCreateTime.labelInfo.text = @"借款时间";
-    cellCreateTime.labelValue.text = [[BasicUtility sharedInstance]defaultTimeForTimeInterval:[_dicInfo[@"createTime"] doubleValue]];
-    [_dicCells[@"Info"] addObject:cellCreateTime];
+//    SimpleHorizontalTableViewCell *cellCreateTime = [SimpleHorizontalTableViewCell viewFromNib];
+//    cellCreateTime.labelInfo.text = @"借款时间";
+//    cellCreateTime.labelValue.text = [[BasicUtility sharedInstance]defaultTimeForTimeInterval:[_dicInfo[@"createTime"] doubleValue]];
+//    [_dicCells[@"Info"] addObject:cellCreateTime];
     
     SimpleHorizontalTableViewCell *cellRepayTime = [SimpleHorizontalTableViewCell viewFromNib];
     cellRepayTime.labelInfo.text = @"承诺还款时间";
@@ -98,6 +104,25 @@
     cellProfit.labelInfo.text = @"利息";
     cellProfit.labelValue.text = _dicInfo[@"interest"];
     [_dicCells[@"Info"] addObject:cellProfit];
+    
+    if (!_bHashMode) {
+        if ([_dicInfo[@"lenderHash"] length]) {
+            SimpleHorizontalTableViewCell *cellHash = [SimpleHorizontalTableViewCell viewFromNib];
+            cellHash.labelInfo.text = @"HashCode";
+            cellHash.labelValue.text = _dicInfo[@"lenderHash"];
+            cellHash.labelValue.numberOfLines = 0;
+            [cellHash setHeight:80];
+            [_dicCells[@"Info"] addObject:cellHash];
+        }
+        else if ([_dicInfo[@"borrowerHash"] length]) {
+            SimpleHorizontalTableViewCell *cellHash = [SimpleHorizontalTableViewCell viewFromNib];
+            cellHash.labelInfo.text = @"HashCode";
+            cellHash.labelValue.text = _dicInfo[@"borrowerHash"];
+            cellHash.labelValue.numberOfLines = 0;
+            [cellHash setHeight:80];
+            [_dicCells[@"Info"] addObject:cellHash];
+        }
+    }
 }
 
 - (IBAction)onButtonLendClicked:(id)sender {
@@ -142,6 +167,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+    
+    SimpleHorizontalTableViewCell *cellHash = (SimpleHorizontalTableViewCell*)[self tableView:tableView cellForRowAtIndexPath:indexPath];
+    if ([cellHash.labelInfo.text isEqualToString:@"HashCode"]) {
+        [self showHUD];
+        [[ECNetworkDataModel sharedInstance]requestForHashInfo:cellHash.labelValue.text withSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [self hideHUD];
+            LendDetailViewController *viewController = [[LendDetailViewController alloc]initWithNibName:nil bundle:nil];
+            viewController.dicInfo = responseObject;
+            viewController.bHashMode = YES;
+            [self.navigationController pushViewController:viewController animated:YES];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [self hideHUD];
+        }];
+    }
 }
 
 @end

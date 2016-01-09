@@ -10,7 +10,9 @@
 #import "STUtilities.h"
 
 @interface SimpleHorizontalTableViewCell ()
-
+{
+    CGFloat m_fHeight;
+}
 
 @end
 
@@ -36,6 +38,19 @@
     }
     
     [super layoutSubviews];
+}
+
+- (CGFloat)height
+{
+    if (m_fHeight) {
+        return m_fHeight;
+    }
+    return 44;
+}
+
+- (void)setHeight:(CGFloat)fHeight
+{
+    m_fHeight = fHeight;
 }
 
 @end

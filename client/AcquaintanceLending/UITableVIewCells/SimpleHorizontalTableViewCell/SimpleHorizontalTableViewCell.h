@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelValue;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *lcTail;
 @property (assign, nonatomic) BOOL bSetTail;
+- (void)setHeight:(CGFloat)fHeight;
 
 @end
