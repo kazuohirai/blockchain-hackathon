@@ -218,6 +218,17 @@ public class Trade {
         this.actualRepayDate = actualRepayDate;
     }
 
+    @PrePersist
+    public void prePersist() {
+        this.createTime = new Date();
+        this.lastTime = new Date();
+    }
+
+    @PreUpdate
+    public void perUpdate() {
+        this.lastTime = new Date();
+    }
+
     @Override
     public String toString() {
         return "Trade{" +
