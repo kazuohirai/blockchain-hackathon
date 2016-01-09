@@ -4,6 +4,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
+import org.blockchain.borrowing.bitcoin.client.BitcoinClient;
+import org.blockchain.borrowing.bitcoin.client.domain.Entry;
+import org.blockchain.borrowing.bitcoin.client.domain.EntryCommit;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.TradeRepository;
@@ -28,6 +31,9 @@ public class TradeService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BitcoinClient bitcoinClient;
 
     public Trade findOne(String tranNo) {
         return tradeRepository.findOne(tranNo);
@@ -81,13 +87,18 @@ public class TradeService {
     public Trade borrowTrade(long userId, Trade trade) {
         LOG.info(String.format("borrow trade of trade %s, user id %s", trade, userId));
         User currentUser = userService.findById(userId);
+        User borrow = userService.findById(trade.getBorrower());
         Validate.isTrue(userId != trade.getBorrower());
 //        Validate.isTrue(trade.getStatus().equals(Trade.Status.INIT));
 
         userService.deduct(currentUser, trade.getAmount());
+        userService.recharge(borrow, trade.getAmount());
 
         trade.setLender(currentUser.getId());
         trade.setStatus(Trade.Status.ING);
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setBorrowerHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;
@@ -107,13 +118,16 @@ public class TradeService {
 
         User borrowUser = userService.findById(trade.getBorrower());
         User lenderUser = userService.findById(trade.getLender());
-        BigDecimal money = trade.getAmount();
+        BigDecimal money = trade.getAmount().add(trade.getInterest());
 
-        userService.recharge(borrowUser, money);
-        userService.deduct(lenderUser, money);
+        userService.recharge(lenderUser, money);
+        userService.deduct(borrowUser, money);
 
         trade.setStatus(Trade.Status.COM);
         trade.setActualRepayDate(new Date());
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setLenderHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;

@@ -61,7 +61,7 @@ public class UserService {
      */
     public User deduct(User user, BigDecimal amount) {
         User _user = userRepository.findOne(user.getId());
-        if (_user.getAmount().subtract(amount).doubleValue() >= 0) {
+        if (_user.getAmount().subtract(amount).doubleValue() < 0) {
             throw new BorrowException("余额不足");
         }
         _user.setAmount(_user.getAmount().subtract(amount));
