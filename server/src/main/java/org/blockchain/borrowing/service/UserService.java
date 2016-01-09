@@ -1,6 +1,5 @@
 package org.blockchain.borrowing.service;
 
-import org.apache.commons.lang3.Validate;
 import org.blockchain.borrowing.BorrowException;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.UserRepository;
@@ -62,8 +61,9 @@ public class UserService {
      */
     public User deduct(User user, BigDecimal amount) {
         User _user = userRepository.findOne(user.getId());
-        Validate.isTrue(_user.getAmount().subtract(amount).doubleValue() >= 0);
-
+        if (_user.getAmount().subtract(amount).doubleValue() >= 0) {
+            throw new BorrowException("余额不足");
+        }
         _user.setAmount(_user.getAmount().subtract(amount));
         return userRepository.save(_user);
     }
