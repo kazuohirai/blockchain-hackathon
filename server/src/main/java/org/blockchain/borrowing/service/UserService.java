@@ -6,6 +6,8 @@ import org.blockchain.borrowing.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class UserService {
 
@@ -35,11 +37,11 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
-    public User deduct(User user, Double amount) {
+    public User deduct(User user, BigDecimal amount) {
         return User.sampleValue();
     }
 
-    public User recharge(User user, Double amount) {
+    public User recharge(User user, BigDecimal amount) {
         return User.sampleValue();
     }
 }
