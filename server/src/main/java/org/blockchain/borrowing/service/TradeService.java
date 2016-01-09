@@ -2,6 +2,7 @@ package org.blockchain.borrowing.service;
 
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.Trade;
+import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.TradeRepository;
 import org.blockchain.borrowing.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class TradeService {
 
     @Autowired
     private TradeRepository tradeRepository;
+
+    @Autowired
+    private UserService userService;
 
     public Trade findOne(String tranNo) {
         return tradeRepository.findOne(tranNo);
@@ -47,17 +51,23 @@ public class TradeService {
     public Trade borrowTrade(long userId, Trade trade) {
         LOG.info(String.format("borrow trade of trade %s, user id %s", trade, userId));
 
-        trade.setStatus(Trade.Status.ING);
-        //// TODO: 1/9/16 扣钱
+        User currentUser = userService.findById(userId);
+        userService.deduct(currentUser, trade.getAmount());
 
+        trade.setStatus(Trade.Status.ING);
         trade = tradeRepository.save(trade);
+
         return trade;
     }
 
 
     public Trade repayTrade(Trade trade) {
         LOG.info(String.format("repay trade of %s", trade));
-        //todo 扣钱
+
+        User borrowUser = userService.findById(trade.getBorrower());
+        User lenderUser = userService.findById(trade.getLender());
+
+
 
         trade.setStatus(Trade.Status.COM);
         trade = tradeRepository.save(trade);
