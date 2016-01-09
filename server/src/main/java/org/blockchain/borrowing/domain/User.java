@@ -50,12 +50,12 @@ public class User {
      * 账户金额
      */
     @Column(name = "amount")
-    private BigDecimal amount;
+    private BigDecimal amount = BigDecimal.ZERO;
 
     /**
      * 联系人
      */
-    @Transient()
+    @Transient
     private List<User> contacts;
 
     public Long getId() {
@@ -112,14 +112,6 @@ public class User {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public static User sampleValue() {
-        User user = new User();
-        user.id = 1L;
-        user.name = "pcg";
-        user.phone = "15802540615";
-        return user;
     }
 
     @Override

@@ -14,4 +14,6 @@ public interface TradeRepository extends CrudRepository<Trade, String> {
     List<Trade> findByBorrowerAndStatusIn(long borrower, Collection<Trade.Status> statues);
 
     List<Trade> findByLenderAndStatusIn(long lender, Collection<Trade.Status> statues);
+
+    List<Trade> findByBorrowerInAndStatusIn(Collection<Long> friends, Collection<Trade.Status> statues);
 }

@@ -38,7 +38,7 @@ public class UserController {
 
     @RequestMapping(path = "/{id}/recharge", method = RequestMethod.POST)
     public User recharge(@PathVariable(value = "id") Long id,
-                         @RequestParam(value = "balance") BigDecimal balance) {
-        return userService.recharge(userService.findById(id), balance);
+                         @RequestBody Map<String, BigDecimal> params) {
+        return userService.recharge(userService.findById(id), params.get("balance"));
     }
 }

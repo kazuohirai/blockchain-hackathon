@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user/{userId}/trade")
@@ -39,7 +40,13 @@ public class TradeController {
                                 @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
 
         Trade.Status tradeStatus = Trade.Status.valueOf(status);
-        List<Trade> trades = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
+        List<Trade> trades;
+        if (tradeStatus.equals(Trade.Status.INIT)) {
+            trades = tradeService.listByFriends(userId);
+        } else {
+            trades = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
+        }
+
         return ValueVo.aValue(trades);
     }
 
@@ -73,13 +80,20 @@ public class TradeController {
         return trade;
     }
 
-
+    /**
+     * Repayment of borrow
+     *
+     * @param userId
+     * @param tradeNo
+     * @param status
+     * @return
+     */
     @RequestMapping(path = "/{tradeNo}", method = RequestMethod.POST)
     public Trade update(@PathVariable("userId") long userId,
                         @PathVariable("tradeNo") String tradeNo,
-                        @RequestParam(value = "status", required = false, defaultValue = "ING") String status) { /* ING 借钱, COM 还钱 */
+                        @RequestBody Map<String, String> status) { /* ING 借钱, COM 还钱 */
 
-        Trade.Status tradeStatus = Trade.Status.valueOf(status);
+        Trade.Status tradeStatus = Trade.Status.valueOf(status.get("status"));
         Trade trade = tradeService.findOne(tradeNo);
 
         if (tradeStatus.equals(Trade.Status.ING)) {

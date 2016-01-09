@@ -1,19 +1,19 @@
 package org.blockchain.borrowing.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.TradeRepository;
+import org.blockchain.borrowing.repository.UserRepository;
 import org.blockchain.borrowing.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TradeService {
@@ -26,16 +26,34 @@ public class TradeService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public Trade findOne(String tranNo) {
         return tradeRepository.findOne(tranNo);
     }
 
     public List<Trade> listByBorrowerAndStatues(long userId, Collection<Trade.Status> statues) {
-        return tradeRepository.findByBorrowerAndStatusIn(userId, statues);
+
+        List<Trade> trades = tradeRepository.findByBorrowerAndStatusIn(userId, statues);
+        return FluentIterable.from(trades).transform(updateUser).toList();
     }
 
     public List<Trade> listByLenderAndStatues(long userId, Collection<Trade.Status> statues) {
-        return tradeRepository.findByLenderAndStatusIn(userId, statues);
+        List<Trade> trades = tradeRepository.findByLenderAndStatusIn(userId, statues);
+        return FluentIterable.from(trades).transform(updateUser).toList();
+    }
+
+    public List<Trade> listByFriends(long userId) {
+        User user = userService.findById(userId);
+        List<User> others = userRepository.findByIdNot(userId);
+        List<Long> otherIds = new ArrayList<>();
+        for (User u : others) {
+            otherIds.add(u.getId());
+        }
+
+        List<Trade> trades = tradeRepository.findByBorrowerInAndStatusIn(otherIds, Collections.singleton(Trade.Status.INIT));
+        return FluentIterable.from(trades).transform(updateUser).toList();
     }
 
     /**
@@ -66,7 +84,7 @@ public class TradeService {
         User currentUser = userService.findById(userId);
         Validate.isTrue(userId != trade.getBorrower());
 //        Validate.isTrue(trade.getStatus().equals(Trade.Status.INIT));
-        
+
         userService.deduct(currentUser, trade.getAmount());
 
         trade.setLender(currentUser.getId());
@@ -96,8 +114,24 @@ public class TradeService {
         userService.deduct(lenderUser, money);
 
         trade.setStatus(Trade.Status.COM);
+        trade.setActualRepayDate(new Date());
         trade = tradeRepository.save(trade);
 
         return trade;
     }
+
+    private Function<Trade, Trade> updateUser = new Function<Trade, Trade>() {
+        @Override
+        public Trade apply(Trade trade) {
+            User borrow = userRepository.findOne(trade.getBorrower());
+
+            if (trade.getLender() != null) {
+                User lender = userRepository.findOne(trade.getLender());
+                trade.setLenderUser(lender);
+            }
+
+            trade.setBorrowerUser(borrow);
+            return trade;
+        }
+    };
 }

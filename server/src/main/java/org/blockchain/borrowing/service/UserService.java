@@ -1,5 +1,6 @@
 package org.blockchain.borrowing.service;
 
+import org.apache.commons.lang3.Validate;
 import org.blockchain.borrowing.BorrowException;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.UserRepository;
@@ -27,7 +28,7 @@ public class UserService {
     /**
      * User Logon Service
      *
-     * @param phone user's phone
+     * @param phone    user's phone
      * @param password user's password
      * @return the user object queried by user's phone
      */
@@ -55,12 +56,14 @@ public class UserService {
     /**
      * deduct amount
      *
-     * @param user current user
+     * @param user   current user
      * @param amount amount
      * @return deducted user
      */
     public User deduct(User user, BigDecimal amount) {
         User _user = userRepository.findOne(user.getId());
+        Validate.isTrue(_user.getAmount().subtract(amount).doubleValue() >= 0);
+
         _user.setAmount(_user.getAmount().subtract(amount));
         return userRepository.save(_user);
     }
@@ -68,7 +71,7 @@ public class UserService {
     /**
      * recharge amount
      *
-     * @param user current user
+     * @param user   current user
      * @param amount amount
      * @return recharged user
      */

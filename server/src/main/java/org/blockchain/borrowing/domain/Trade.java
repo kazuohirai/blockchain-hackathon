@@ -68,7 +68,7 @@ public class Trade {
      * 状态
      */
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.INIT;
 
     /**
      * 还款时间
@@ -87,6 +87,9 @@ public class Trade {
      */
     @Column(name = "last_time")
     private Date lastTime = new Date();
+
+    @Column(name = "actual_repay_date")
+    private Date actualRepayDate;
 
     public enum Status {
 
@@ -207,38 +210,12 @@ public class Trade {
         this.borrowerUser = borrowerUser;
     }
 
-    public static Trade sampleValue() {
-        Trade trade = new Trade();
-        trade.borrowerHash = "borrowerHash";
-        trade.lenderHash = "lenderHash";
-        trade.borrower = 1L;
-        trade.lender = 2L;
-        trade.amount = BigDecimal.valueOf(100);
-        trade.interest = BigDecimal.ONE;
-        trade.status = Status.INIT;
-        trade.borrowerUser = new User();
-        trade.borrowerUser.setName("甲");
-        trade.lenderUser = new User();
-        trade.lenderUser.setName("乙");
-
-        return trade;
+    public Date getActualRepayDate() {
+        return actualRepayDate;
     }
 
-    public static Trade sampleValue(Status status) {
-        Trade trade = new Trade();
-        trade.borrowerHash = "borrowerHash";
-        trade.lenderHash = "lenderHash";
-        trade.borrower = 1L;
-        trade.lender = 2L;
-        trade.amount = BigDecimal.valueOf(100);
-        trade.interest = BigDecimal.ONE;
-        trade.status = status;
-        trade.borrowerUser = new User();
-        trade.borrowerUser.setName("甲");
-        trade.lenderUser = new User();
-        trade.lenderUser.setName("乙");
-
-        return trade;
+    public void setActualRepayDate(Date actualRepayDate) {
+        this.actualRepayDate = actualRepayDate;
     }
 
     @Override
