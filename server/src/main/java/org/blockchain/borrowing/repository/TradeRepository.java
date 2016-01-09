@@ -1,6 +1,7 @@
 package org.blockchain.borrowing.repository;
 
 import org.blockchain.borrowing.domain.Trade;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,11 +15,11 @@ import java.util.List;
  */
 public interface TradeRepository extends CrudRepository<Trade, String> {
 
-    List<Trade> findByBorrowerAndStatusIn(long borrower, Collection<Trade.Status> statues);
+    List<Trade> findByBorrowerAndStatusInOrderByCreateTimeDesc(long borrower, Collection<Trade.Status> statues);
 
-    List<Trade> findByLenderAndStatusIn(long lender, Collection<Trade.Status> statues);
+    List<Trade> findByLenderAndStatusInOrderByCreateTimeDesc(long lender, Collection<Trade.Status> statues);
 
-    List<Trade> findByBorrowerInAndStatusIn(Collection<Long> friends, Collection<Trade.Status> statues);
+    List<Trade> findByBorrowerInAndStatusInOrderByCreateTimeDesc(Collection<Long> friends, Collection<Trade.Status> statues);
 
     @Query(value = "select sum(amount) from Trade where borrower = :userId and status = 'COM'")
     Double summaryBorrow(@Param("userId") long userId);

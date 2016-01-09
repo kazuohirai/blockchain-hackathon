@@ -41,12 +41,12 @@ public class TradeService {
 
     public List<Trade> listByBorrowerAndStatues(long userId, Collection<Trade.Status> statues) {
 
-        List<Trade> trades = tradeRepository.findByBorrowerAndStatusIn(userId, statues);
+        List<Trade> trades = tradeRepository.findByBorrowerAndStatusInOrderByCreateTimeDesc(userId, statues);
         return FluentIterable.from(trades).transform(updateUser).toList();
     }
 
     public List<Trade> listByLenderAndStatues(long userId, Collection<Trade.Status> statues) {
-        List<Trade> trades = tradeRepository.findByLenderAndStatusIn(userId, statues);
+        List<Trade> trades = tradeRepository.findByLenderAndStatusInOrderByCreateTimeDesc(userId, statues);
         return FluentIterable.from(trades).transform(updateUser).toList();
     }
 
@@ -57,7 +57,7 @@ public class TradeService {
             otherIds.add(u.getId());
         }
 
-        List<Trade> trades = tradeRepository.findByBorrowerInAndStatusIn(otherIds, Collections.singleton(Trade.Status.INIT));
+        List<Trade> trades = tradeRepository.findByBorrowerInAndStatusInOrderByCreateTimeDesc(otherIds, Collections.singleton(Trade.Status.INIT));
         return FluentIterable.from(trades).transform(updateUser).toList();
     }
 
