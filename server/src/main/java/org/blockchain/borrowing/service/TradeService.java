@@ -45,7 +45,6 @@ public class TradeService {
     }
 
     public List<Trade> listByFriends(long userId) {
-        User user = userService.findById(userId);
         List<User> others = userRepository.findByIdNot(userId);
         List<Long> otherIds = new ArrayList<>();
         for (User u : others) {
@@ -59,8 +58,8 @@ public class TradeService {
     /**
      * post a trade
      *
-     * @param trade
-     * @return
+     * @param trade trade object data
+     * @return saved trade object
      */
     public Trade postTrade(Trade trade) {
         ValidateUtils.notNulls(trade.getBorrower(), trade.getAmount(), trade.getInterest());
@@ -76,8 +75,8 @@ public class TradeService {
      * borrow a trade
      *
      * @param userId lender id
-     * @param trade
-     * @return
+     * @param trade trade object data
+     * @return saved trade object
      */
     public Trade borrowTrade(long userId, Trade trade) {
         LOG.info(String.format("borrow trade of trade %s, user id %s", trade, userId));
@@ -99,7 +98,7 @@ public class TradeService {
      *
      * @param userId borrow id
      * @param trade  trade
-     * @return
+     * @return rePayed trade object
      */
     public Trade repayTrade(long userId, Trade trade) {
         LOG.info(String.format("repay trade of %s", trade));
@@ -134,4 +133,31 @@ public class TradeService {
             return trade;
         }
     };
+
+    public Double summaryBorrow(long userId) {
+        Double d = tradeRepository.summaryBorrow(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryLend(long userId) {
+        Double d = tradeRepository.summaryLend(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryCredit(long userId) {
+        Long rePayed = tradeRepository.countRePayed(userId);
+        Long overRePayed = tradeRepository.countOverRePay(userId);
+        Double defaultCreditScore = Trade.DEFAULT_CREDIT_SCORE;
+        return new BigDecimal(defaultCreditScore).add(new BigDecimal(rePayed)).subtract(new BigDecimal(overRePayed)).doubleValue();
+    }
+
+    public Double summaryInCome(long userId) {
+        Double d = tradeRepository.summaryInCome(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryOutCome(long userId) {
+        Double d = tradeRepository.summaryOutCome(userId);
+        return d == null ? 0D : d;
+    }
 }

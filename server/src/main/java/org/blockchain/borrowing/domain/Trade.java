@@ -14,6 +14,7 @@ import java.util.UUID;
 @Table(name = "b_trade")
 public class Trade {
 
+    public static final Double DEFAULT_CREDIT_SCORE = 100D;
     /**
      * 交易编号
      */

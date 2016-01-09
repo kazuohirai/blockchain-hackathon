@@ -1,6 +1,7 @@
 package org.blockchain.borrowing.web;
 
 import org.apache.log4j.Logger;
+import org.blockchain.borrowing.BorrowException;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.service.TradeService;
 import org.blockchain.borrowing.web.vo.ValueVo;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,4 +106,46 @@ public class TradeController {
 
         return trade;
     }
+
+    /**
+     * 统计数据
+     *
+     * @param userId 用户Id
+     * @return 数据
+     */
+    @RequestMapping(path = "/summary", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Double> summary(@PathVariable("userId") long userId) {
+
+        /* 借款总额 */
+        Double borrow = tradeService.summaryBorrow(userId);
+
+        /* 借款利息总额 */
+        Double inCome = tradeService.summaryInCome(userId);
+
+        /* 放款总额 */
+        Double lend = tradeService.summaryLend(userId);
+
+        /* 借款利息总额 */
+        Double outCome = tradeService.summaryOutCome(userId);
+
+        /* 信用评分 */
+        Double credit = tradeService.summaryCredit(userId);
+
+        Map<String, Double> map = new HashMap<>();
+
+        map.put("borrow", borrow);
+
+        map.put("inCome", inCome);
+
+        map.put("lend", lend);
+
+        map.put("outCome", outCome);
+
+        map.put("credit", credit);
+
+        return map;
+    }
+
+
 }
