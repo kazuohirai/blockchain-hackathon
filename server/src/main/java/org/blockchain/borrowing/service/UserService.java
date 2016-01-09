@@ -21,6 +21,9 @@ public class UserService {
      * @return created User Object
      */
     public User registry(User user) {
+        if (userRepository.findByPhone(user.getPhone()) != null) {
+            throw new BorrowException("该手机号码已注册");
+        }
         return userRepository.save(user);
     }
 
