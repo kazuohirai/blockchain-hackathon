@@ -180,6 +180,14 @@ public class Trade {
         this.lastTime = lastTime;
     }
 
+    public Date getRepayDate() {
+        return repayDate;
+    }
+
+    public void setRepayDate(Date repayDate) {
+        this.repayDate = repayDate;
+    }
+
     public static Trade sampleValue() {
         Trade trade = new Trade();
         trade.borrowerHash = "borrowerHash";
