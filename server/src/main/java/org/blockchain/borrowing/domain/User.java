@@ -1,6 +1,7 @@
 package org.blockchain.borrowing.domain;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class User {
      * 账户金额
      */
     @Column(name = "amount")
-    private double amount;
+    private BigDecimal amount;
 
     /**
      * 联系人
@@ -106,11 +107,11 @@ public class User {
         this.contacts = contacts;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

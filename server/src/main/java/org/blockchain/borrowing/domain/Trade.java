@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,13 +53,13 @@ public class Trade {
      * 金额
      */
     @Column(name = "amount")
-    private double amount;
+    private BigDecimal amount;
 
     /**
      * 利息
      */
     @Column(name = "interest")
-    private double interest;
+    private BigDecimal interest;
 
     /**
      * 状态
@@ -140,19 +141,19 @@ public class Trade {
         this.lender = lender;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public double getInterest() {
+    public BigDecimal getInterest() {
         return interest;
     }
 
-    public void setInterest(double interest) {
+    public void setInterest(BigDecimal interest) {
         this.interest = interest;
     }
 
@@ -194,8 +195,8 @@ public class Trade {
         trade.lenderHash = "lenderHash";
         trade.borrower = 1L;
         trade.lender = 2L;
-        trade.amount = 1000L;
-        trade.interest = 10L;
+        trade.amount = BigDecimal.valueOf(100);
+        trade.interest = BigDecimal.ONE;
         trade.status = Status.INIT;
 
         return trade;
