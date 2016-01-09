@@ -47,6 +47,12 @@ public class User {
     private String password;
 
     /**
+     * 账户金额
+     */
+    @Column(name = "amount")
+    private double amount;
+
+    /**
      * 联系人
      */
     @Transient()
@@ -98,6 +104,14 @@ public class User {
 
     public void setContacts(List<User> contacts) {
         this.contacts = contacts;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     public static User sampleValue() {
