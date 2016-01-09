@@ -4,6 +4,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
+import org.blockchain.borrowing.bitcoin.client.BitcoinClient;
+import org.blockchain.borrowing.bitcoin.client.domain.Entry;
+import org.blockchain.borrowing.bitcoin.client.domain.EntryCommit;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.domain.User;
 import org.blockchain.borrowing.repository.TradeRepository;
@@ -29,6 +32,9 @@ public class TradeService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BitcoinClient bitcoinClient;
+
     public Trade findOne(String tranNo) {
         return tradeRepository.findOne(tranNo);
     }
@@ -45,7 +51,6 @@ public class TradeService {
     }
 
     public List<Trade> listByFriends(long userId) {
-        User user = userService.findById(userId);
         List<User> others = userRepository.findByIdNot(userId);
         List<Long> otherIds = new ArrayList<>();
         for (User u : others) {
@@ -59,8 +64,8 @@ public class TradeService {
     /**
      * post a trade
      *
-     * @param trade
-     * @return
+     * @param trade trade object data
+     * @return saved trade object
      */
     public Trade postTrade(Trade trade) {
         ValidateUtils.notNulls(trade.getBorrower(), trade.getAmount(), trade.getInterest());
@@ -76,19 +81,24 @@ public class TradeService {
      * borrow a trade
      *
      * @param userId lender id
-     * @param trade
-     * @return
+     * @param trade  trade object data
+     * @return saved trade object
      */
     public Trade borrowTrade(long userId, Trade trade) {
         LOG.info(String.format("borrow trade of trade %s, user id %s", trade, userId));
         User currentUser = userService.findById(userId);
+        User borrow = userService.findById(trade.getBorrower());
         Validate.isTrue(userId != trade.getBorrower());
 //        Validate.isTrue(trade.getStatus().equals(Trade.Status.INIT));
 
         userService.deduct(currentUser, trade.getAmount());
+        userService.recharge(borrow, trade.getAmount());
 
         trade.setLender(currentUser.getId());
         trade.setStatus(Trade.Status.ING);
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setBorrowerHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;
@@ -99,39 +109,69 @@ public class TradeService {
      *
      * @param userId borrow id
      * @param trade  trade
-     * @return
+     * @return rePayed trade object
      */
     public Trade repayTrade(long userId, Trade trade) {
         LOG.info(String.format("repay trade of %s", trade));
         Validate.isTrue(userId == trade.getBorrower());
+        ValidateUtils.isSame(trade, Trade.fromEntry(bitcoinClient.findByHash(trade.getBorrowerHash()).toReadable()));
 //        Validate.isTrue(trade.getStatus().equals(Trade.Status.ING));
 
         User borrowUser = userService.findById(trade.getBorrower());
         User lenderUser = userService.findById(trade.getLender());
-        BigDecimal money = trade.getAmount();
+        BigDecimal money = trade.getAmount().add(trade.getInterest());
 
-        userService.recharge(borrowUser, money);
-        userService.deduct(lenderUser, money);
+        userService.recharge(lenderUser, money);
+        userService.deduct(borrowUser, money);
 
         trade.setStatus(Trade.Status.COM);
         trade.setActualRepayDate(new Date());
+
+        EntryCommit entryCommit = bitcoinClient.composeCommit(Entry.fromTrade(trade));
+        trade.setLenderHash(entryCommit.getHash());
         trade = tradeRepository.save(trade);
 
         return trade;
     }
 
-    private Function<Trade, Trade> updateUser = new Function<Trade, Trade>() {
+    public Function<Trade, Trade> updateUser = new Function<Trade, Trade>() {
         @Override
         public Trade apply(Trade trade) {
             User borrow = userRepository.findOne(trade.getBorrower());
-
+            trade.setBorrowerUser(borrow);
             if (trade.getLender() != null) {
                 User lender = userRepository.findOne(trade.getLender());
                 trade.setLenderUser(lender);
             }
 
-            trade.setBorrowerUser(borrow);
             return trade;
         }
     };
+
+    public Double summaryBorrow(long userId) {
+        Double d = tradeRepository.summaryBorrow(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryLend(long userId) {
+        Double d = tradeRepository.summaryLend(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryCredit(long userId) {
+        Long rePayed = tradeRepository.countRePayed(userId);
+        Long overRePayed = tradeRepository.countOverRePay(userId);
+        Double defaultCreditScore = Trade.DEFAULT_CREDIT_SCORE;
+        return new BigDecimal(defaultCreditScore).add(new BigDecimal(rePayed)).subtract(new BigDecimal(overRePayed)).doubleValue();
+    }
+
+    public Double summaryInCome(long userId) {
+        Double d = tradeRepository.summaryInCome(userId);
+        return d == null ? 0D : d;
+    }
+
+    public Double summaryOutCome(long userId) {
+        Double d = tradeRepository.summaryOutCome(userId);
+        return d == null ? 0D : d;
+    }
 }

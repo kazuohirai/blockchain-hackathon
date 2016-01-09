@@ -21,6 +21,9 @@ public class UserService {
      * @return created User Object
      */
     public User registry(User user) {
+        if (userRepository.findByPhone(user.getPhone()) != null) {
+            throw new BorrowException("该手机号码已注册");
+        }
         return userRepository.save(user);
     }
 
@@ -61,7 +64,7 @@ public class UserService {
      */
     public User deduct(User user, BigDecimal amount) {
         User _user = userRepository.findOne(user.getId());
-        if (_user.getAmount().subtract(amount).doubleValue() >= 0) {
+        if (_user.getAmount().subtract(amount).doubleValue() < 0) {
             throw new BorrowException("余额不足");
         }
         _user.setAmount(_user.getAmount().subtract(amount));

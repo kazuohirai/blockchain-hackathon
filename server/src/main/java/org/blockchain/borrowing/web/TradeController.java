@@ -1,13 +1,16 @@
 package org.blockchain.borrowing.web;
 
 import org.apache.log4j.Logger;
+import org.blockchain.borrowing.BorrowException;
 import org.blockchain.borrowing.domain.Trade;
 import org.blockchain.borrowing.service.TradeService;
 import org.blockchain.borrowing.web.vo.ValueVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,25 @@ public class TradeController {
 
         return ValueVo.aValue(trades);
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ValueVo listAll(@PathVariable("userId") long userId,
+                           @RequestParam(value = "status", required = false, defaultValue = "COM") String status) { /* INIT 申请的借款,  ING 借出去的和借别人的, COM 完成的借款 */
+
+        Trade.Status tradeStatus = Trade.Status.valueOf(status);
+        List<Trade> trades = new ArrayList<>();
+        List<Trade> tradesAsBorrow = tradeService.listByBorrowerAndStatues(userId, Collections.singleton(tradeStatus));
+        List<Trade> tradesAsLender = tradeService.listByLenderAndStatues(userId, Collections.singleton(tradeStatus));
+        if (!tradesAsBorrow.isEmpty()) {
+            trades.addAll(tradesAsBorrow);
+        }
+
+        if (!tradesAsLender.isEmpty()) {
+            trades.addAll(tradesAsLender);
+        }
+        return ValueVo.aValue(trades);
+    }
+
 
     /**
      * Create a trade
@@ -104,4 +126,46 @@ public class TradeController {
 
         return trade;
     }
+
+    /**
+     * 统计数据
+     *
+     * @param userId 用户Id
+     * @return 数据
+     */
+    @RequestMapping(path = "/summary", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Double> summary(@PathVariable("userId") long userId) {
+
+        /* 借款总额 */
+        Double borrow = tradeService.summaryBorrow(userId);
+
+        /* 借款利息总额 */
+        Double inCome = tradeService.summaryInCome(userId);
+
+        /* 放款总额 */
+        Double lend = tradeService.summaryLend(userId);
+
+        /* 借款利息总额 */
+        Double outCome = tradeService.summaryOutCome(userId);
+
+        /* 信用评分 */
+        Double credit = tradeService.summaryCredit(userId);
+
+        Map<String, Double> map = new HashMap<>();
+
+        map.put("borrow", borrow);
+
+        map.put("inCome", inCome);
+
+        map.put("lend", lend);
+
+        map.put("outCome", outCome);
+
+        map.put("credit", credit);
+
+        return map;
+    }
+
+
 }
