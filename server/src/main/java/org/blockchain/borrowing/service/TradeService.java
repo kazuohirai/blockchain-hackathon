@@ -8,6 +8,7 @@ import org.blockchain.borrowing.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public class TradeService {
 
         User borrowUser = userService.findById(trade.getBorrower());
         User lenderUser = userService.findById(trade.getLender());
-        Double money = trade.getAmount();
+        BigDecimal money = trade.getAmount();
 
         userService.recharge(borrowUser, money);
         userService.deduct(lenderUser, money);
