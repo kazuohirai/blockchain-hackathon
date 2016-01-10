@@ -127,6 +127,7 @@ public class User {
                 '}';
     }
 
+    @Transient
     private String sign;
 
     public String getSign() {
