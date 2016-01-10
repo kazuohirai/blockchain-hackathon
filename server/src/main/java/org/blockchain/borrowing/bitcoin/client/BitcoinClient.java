@@ -48,7 +48,7 @@ public class BitcoinClient {
             LOG.error("can't get response of " + BLOCK_COMMIT);
         }
 
-        return null;
+        throw new RuntimeException("can't block commit");
     }
 
     public void commit(EntryCommit entryCommit) {
@@ -103,7 +103,6 @@ public class BitcoinClient {
             }
         }
 
-
-        return null;
+        throw new RuntimeException("can't find entry by hash");
     }
 }
