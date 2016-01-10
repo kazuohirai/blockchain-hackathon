@@ -127,8 +127,10 @@ public class User {
                 '}';
     }
 
+    private String sign;
+
     public String getSign() {
         //todo generate a user sign
-        return null;
+        return sign;
     }
 }
