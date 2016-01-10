@@ -13,8 +13,8 @@
 #import "ECContext.h"
 #import "SplashViewController.h"
 
-const NSString* ECURLADDRESS = @"http://192.168.0.233:8080";
-const NSString* ECOPERATIONURLADDRESS = @"http://192.168.0.233:8080";
+const NSString* ECURLADDRESS = @"http://192.168.0.43:8080";
+const NSString* ECOPERATIONURLADDRESS = @"http://192.168.0.43:8080";
 
 
 enum {

@@ -106,18 +106,25 @@
     [_dicCells[@"Info"] addObject:cellProfit];
     
     if (!_bHashMode) {
-        if ([_dicInfo[@"lenderHash"] length]) {
+        if ([_dicInfo[@"lenderHash"] length] && [_dicInfo[@"borrowerHash"] length]) {
+            SimpleHorizontalTableViewCell *cellHashLender = [SimpleHorizontalTableViewCell viewFromNib];
+            cellHashLender.labelInfo.text = @"借款HashCode";
+            cellHashLender.labelValue.text = _dicInfo[@"lenderHash"];
+            cellHashLender.labelValue.numberOfLines = 0;
+            [cellHashLender setHeight:80];
+            [_dicCells[@"Info"] addObject:cellHashLender];
+            
+            SimpleHorizontalTableViewCell *cellHashBorrower = [SimpleHorizontalTableViewCell viewFromNib];
+            cellHashBorrower.labelInfo.text = @"还款HashCode";
+            cellHashBorrower.labelValue.text = _dicInfo[@"borrowerHash"];
+            cellHashBorrower.labelValue.numberOfLines = 0;
+            [cellHashBorrower setHeight:80];
+            [_dicCells[@"Info"] addObject:cellHashBorrower];
+        }
+        else if ([_dicInfo[@"lenderHash"] length]) {
             SimpleHorizontalTableViewCell *cellHash = [SimpleHorizontalTableViewCell viewFromNib];
             cellHash.labelInfo.text = @"HashCode";
             cellHash.labelValue.text = _dicInfo[@"lenderHash"];
-            cellHash.labelValue.numberOfLines = 0;
-            [cellHash setHeight:80];
-            [_dicCells[@"Info"] addObject:cellHash];
-        }
-        else if ([_dicInfo[@"borrowerHash"] length]) {
-            SimpleHorizontalTableViewCell *cellHash = [SimpleHorizontalTableViewCell viewFromNib];
-            cellHash.labelInfo.text = @"HashCode";
-            cellHash.labelValue.text = _dicInfo[@"borrowerHash"];
             cellHash.labelValue.numberOfLines = 0;
             [cellHash setHeight:80];
             [_dicCells[@"Info"] addObject:cellHash];
@@ -169,7 +176,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
     
     SimpleHorizontalTableViewCell *cellHash = (SimpleHorizontalTableViewCell*)[self tableView:tableView cellForRowAtIndexPath:indexPath];
-    if ([cellHash.labelInfo.text isEqualToString:@"HashCode"]) {
+    if ([cellHash.labelInfo.text isEqualToString:@"HashCode"] || [cellHash.labelInfo.text isEqualToString:@"借款HashCode"] || [cellHash.labelInfo.text isEqualToString:@"还款HashCode"]) {
         [self showHUD];
         [[ECNetworkDataModel sharedInstance]requestForHashInfo:cellHash.labelValue.text withSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self hideHUD];
