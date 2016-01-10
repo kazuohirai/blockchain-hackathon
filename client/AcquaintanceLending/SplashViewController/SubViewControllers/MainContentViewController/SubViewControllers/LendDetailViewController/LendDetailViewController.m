@@ -129,6 +129,14 @@
             [cellHash setHeight:80];
             [_dicCells[@"Info"] addObject:cellHash];
         }
+        else if ([_dicInfo[@"borrowerHash"] length]) {
+            SimpleHorizontalTableViewCell *cellHash = [SimpleHorizontalTableViewCell viewFromNib];
+            cellHash.labelInfo.text = @"HashCode";
+            cellHash.labelValue.text = _dicInfo[@"borrowerHash"];
+            cellHash.labelValue.numberOfLines = 0;
+            [cellHash setHeight:80];
+            [_dicCells[@"Info"] addObject:cellHash];
+        }
     }
 }
 
