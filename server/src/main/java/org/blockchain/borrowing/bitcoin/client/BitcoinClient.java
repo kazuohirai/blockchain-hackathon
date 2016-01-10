@@ -65,8 +65,6 @@ public class BitcoinClient {
         } catch (IOException e) {
             LOG.error("can't get response of " + COMMIT_URL);
         }
-
-        throw new RuntimeException("can't commit");
     }
 
     public void reveal(EntryCommit entryCommit) {
@@ -83,8 +81,6 @@ public class BitcoinClient {
         } catch (IOException e) {
             LOG.error("can't get response of " + REVEAL_URL);
         }
-
-        throw new RuntimeException("can't reveal");
     }
 
     public Entry findByHash(String hash) {
