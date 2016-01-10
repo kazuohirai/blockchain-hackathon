@@ -31,7 +31,7 @@
     if ([_dicInfo[@"status"]isEqualToString:@"INIT"]) {
         self.title = @"借款信息";
         if (_bHashMode) {
-            self.title = @"借款信息校验";
+            self.title = @"信息校验";
         }
         _lcBottom.constant = 60;
         _viewBottom.hidden = NO;
@@ -39,7 +39,7 @@
     else {
         self.title = @"借款信息";
         if (_bHashMode) {
-            self.title = @"借款信息校验";
+            self.title = @"信息校验";
         }
         _lcBottom.constant = 0;
         _viewBottom.hidden = YES;
