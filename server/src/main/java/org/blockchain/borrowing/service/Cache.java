@@ -20,6 +20,12 @@ abstract class Cache {
 
     static Cache get() {
         //todo newInstance CacheImplement
-        return null;
+        return new Cache() {
+
+            @Override
+            void put(Object key, Object value, String expire) {
+
+            }
+        };
     }
 }
