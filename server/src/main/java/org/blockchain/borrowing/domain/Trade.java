@@ -9,7 +9,7 @@ import java.util.UUID;
 
 /**
  * 交易记录
- * <p>
+ *
  * Created by pengchangguo on 16/1/9.
  */
 @Entity

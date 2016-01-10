@@ -126,4 +126,9 @@ public class User {
                 ", contacts=" + contacts +
                 '}';
     }
+
+    public String getSign() {
+        //todo generate a user sign
+        return null;
+    }
 }

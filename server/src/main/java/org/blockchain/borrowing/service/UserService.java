@@ -42,6 +42,9 @@ public class UserService {
         if (!password.equalsIgnoreCase(user.getPassword())) {
             throw new BorrowException("密码不正确");
         }
+
+        /* store the user's sign, expired time is 30h, keepAlive  */
+        Cache.get().put(user.getSign(), System.currentTimeMillis(), "30h");
         return user;
     }
 
