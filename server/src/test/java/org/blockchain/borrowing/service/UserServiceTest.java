@@ -42,6 +42,7 @@ public class UserServiceTest {
 
     @After
     public void after() {
+        if (user.getId() != null) userRepository.delete(user.getId());
         user = null;
     }
 
